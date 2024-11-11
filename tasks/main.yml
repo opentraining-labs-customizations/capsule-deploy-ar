@@ -159,3 +159,50 @@
   ansible.builtin.dnf:
     state: present
     name: satellite-capsule
+
+- name: Define Certificate files to fetch
+  ansible.builtin.set_fact:
+    cert_files:
+      - cert.pem
+      - privkey.pem
+      - letsencrypt-ca-bundle.pem
+
+- name: Fetch cartificate files from the capsule VM to control node
+  when: "'capsule' in inventory_hostname"
+  loop: "{{ cert_files }}"
+  ansible.builtin.fetch:
+    src: /etc/letsencrypt/live/{{ pert_capsule_external_fqdn }}/{{ item }}
+    dest: /{{ output_dir }}/capsule-certs/
+    flat: yes
+
+- name: Copy cartificate files from the control node to the satellite VM
+  when: "'satellite' in inventory_hostname"
+  loop: "{{ cert_files }}"
+  delegate_to: satellite
+  ansible.builtin.copy:
+    src: /{{ output_dir }}/capsule-certs/{{ item }}
+    dest: /root/capsule-certs/
+
+- name: Generate capsule certificates on satellite server
+  delegate_to: satellite
+  shell: >
+    capsule-certs-generate \
+    --foreman-proxy-fqdn {{ pert_capsule_external_fqdn }} \
+    --certs-tar /root/capsule_certs.tar \
+    --server-cert /root/capsule-certs/cert.pem \
+    --server-key /root/capsule-certs/privkey.pem \
+    --server-ca-cert /root/capsule-certs/letsencrypt-ca-bundle.pem
+
+- name: Fetch capsule cartificate tar file from the satellite VM to control node
+  when: "'satellite' in inventory_hostname"
+  ansible.builtin.fetch:
+    src: /root/capsule_certs.tar
+    dest: /{{ output_dir }}/
+    flat: yes
+
+- name: Copy capsule cartificate tar file from the control node to the capsule VM
+  when: "'capsule' in inventory_hostname"
+  ansible.builtin.copy:
+    src: /{{ output_dir }}/capsule_certs.tar
+    dest: /root/
+
