@@ -123,7 +123,7 @@
     disable_gpg_check: true
     name: http://{{ pert_satellite_external_fqdn }}/pub/katello-ca-consumer-latest.noarch.rpm
 
-- name: [1]Sleep for 150 seconds and continue with play
+- name: 1 - Sleep for 150 seconds and continue with play
   ansible.builtin.wait_for:
     timeout: 150
   delegate_to: localhost
@@ -136,7 +136,7 @@
     password: "{{ pert_satellite_user_password }}"
     auto_attach: true
 
-- name: [2]Sleep for 150 seconds and continue with play
+- name: 2 - Sleep for 150 seconds and continue with play
   ansible.builtin.wait_for:
     timeout: 150
   delegate_to: localhost
