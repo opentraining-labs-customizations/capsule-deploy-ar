@@ -129,6 +129,7 @@
   delegate_to: localhost
 
 - name: Register the system
+  ignore_errors: true
   community.general.redhat_subscription:
     state: present
     username: "{{ pert_satellite_user_name }}"
@@ -141,6 +142,7 @@
   delegate_to: localhost
 
 - name: Register the system
+  ignore_errors: true
   community.general.redhat_subscription:
     state: present
     username: "{{ pert_satellite_user_name }}"
