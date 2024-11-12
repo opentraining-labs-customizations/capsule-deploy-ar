@@ -233,12 +233,12 @@
   delegate_to: "satellite.{{ guid }}.internal"
   ansible.builtin.slurp:
     src: /root/satellite-install-capsule-cmd.txt
-  register: satellite-install-capsule-cmd
+  register: satellite_install_capsule_cmd
 
 - name: Copy satellite-install-capsule-cmd command file from satellite to capsule
   copy:
     content: |
-      {{ satellite-install-capsule-cmd.content|b64decode }}
+      {{ satellite_install_capsule_cmd.content|b64decode }}
     dest: /root/satellite-install-capsule-cmd.sh
     mode: 755
 
