@@ -213,13 +213,14 @@
     --server-key /root/capsule-certs/privkey.pem \
     --server-ca-cert /root/capsule-certs/letsencrypt-ca-bundle.pem > /root/output.txt
 
-- name: Fetch cartificate files from the capsule  VM to control node
+- name: Fetch cartificate files from the satellite  VM to control node
+  delegate_to: "satellite.{{ guid }}.internal"
   ansible.builtin.fetch:
     src: /root/capsule_certs.tar
     dest: "{{ output_dir }}"
     flat: yes
 
-- name: Copy cartificate files from the control node to the satellite VM
+- name: Copy cartificate files from the control node to the capsule VM
   ansible.builtin.copy:
     src: "{{ output_dir }}/capsule_certs.tar"
     dest: /root
