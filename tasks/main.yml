@@ -169,7 +169,7 @@
   delegate_to: satellite
   copy:
     content: |
-      {{ hostvars.capsule.capsule_cert_file.content|b64decode }}
+      {{ capsule_cert_file.content|b64decode }}
     dest: /root/capsule-certs/cert.pem
 
 - name: Fetch privkey.pem file from the capsule VM
@@ -181,7 +181,7 @@
   delegate_to: satellite
   copy:
     content: |
-      {{ hostvars.capsule.capsule_cert_file.content|b64decode }}
+      {{ capsule_cert_file.content|b64decode }}
     dest: /root/capsule-certs/privkey.pem
 
 - name: Fetch letsencrypt-ca-bundle.pem file from the capsule VM
@@ -193,7 +193,7 @@
   delegate_to: satellite
   copy:
     content: |
-      {{ hostvars.capsule.capsule_cert_file.content|b64decode }}
+      {{ capsule_cert_file.content|b64decode }}
     dest: /root/capsule-certs/letsencrypt-ca-bundle.pem
 
 - name: Generate capsule certificates on satellite server
@@ -215,6 +215,6 @@
 - name: Copy capsule_certs.tar file from satellite to capsule
   copy:
     content: |
-      {{ hostvars.satellite.capsule_cert_file.content|b64decode }}
+      {{ capsule_cert_file.content|b64decode }}
     dest: /root/capsule_certs.tar
 
