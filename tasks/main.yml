@@ -211,7 +211,7 @@
     --certs-tar /root/capsule_certs.tar \
     --server-cert /root/capsule-certs/cert.pem \
     --server-key /root/capsule-certs/privkey.pem \
-    --server-ca-cert /root/capsule-certs/letsencrypt-ca-bundle.pem > output.txt
+    --server-ca-cert /root/capsule-certs/letsencrypt-ca-bundle.pem > /root/output.txt
 
 - name: Fetch the generated capsule_certs.tar file from satellite
   delegate_to: "satellite.{{ guid }}.internal"
