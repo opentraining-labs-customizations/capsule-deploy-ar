@@ -160,6 +160,13 @@
     state: present
     name: satellite-capsule
 
+- name: Create a directory to store capsule certificates
+  delegate_to: "satellite.{{ guid }}.internal"
+  ansible.builtin.file:
+    path: /root/capsule-certs
+    state: directory
+    mode: '0755'
+
 - name: Fetch cert.pem file from the capsule VM
   ansible.builtin.slurp:
     src: /etc/letsencrypt/live/{{ pert_capsule_external_fqdn }}/cert.pem
@@ -208,7 +215,6 @@
 
 - name: Fetch the generated capsule_certs.tar file from satellite
   delegate_to: "satellite.{{ guid }}.internal"
-  
   ansible.builtin.slurp:
     src: /root/capsule_certs.tar
   register: capsule_cert_file
