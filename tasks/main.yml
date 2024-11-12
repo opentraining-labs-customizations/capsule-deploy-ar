@@ -213,17 +213,16 @@
     --server-key /root/capsule-certs/privkey.pem \
     --server-ca-cert /root/capsule-certs/letsencrypt-ca-bundle.pem > /root/output.txt
 
-- name: Fetch the generated capsule_certs.tar file from satellite
-  delegate_to: "satellite.{{ guid }}.internal"
-  ansible.builtin.slurp:
+- name: Fetch cartificate files from the capsule  VM to control node
+  ansible.builtin.fetch:
     src: /root/capsule_certs.tar
-  register: capsule_cert_file
-  
-- name: Copy capsule_certs.tar file from satellite to capsule
-  copy:
-    content: |
-      {{ capsule_cert_file.content|b64decode }}
-    dest: /root/capsule_certs.tar
+    dest: "{{ output_dir }}"
+    flat: yes
+
+- name: Copy cartificate files from the control node to the satellite VM
+  ansible.builtin.copy:
+    src: "{{ output_dir }}/capsule_certs.tar"
+    dest: /root
 
 - name: Grab satellite-installer command for capsule deployment
   delegate_to: "satellite.{{ guid }}.internal"
