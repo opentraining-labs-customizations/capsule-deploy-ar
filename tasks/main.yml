@@ -217,13 +217,13 @@
   delegate_to: "satellite.{{ guid }}.internal"
   ansible.builtin.fetch:
     src: /root/capsule_certs.tar
-    dest: "{{ output_dir }}"
+    dest: "{{ output_dir }}/"
     flat: yes
 
 - name: Copy cartificate files from the control node to the capsule VM
   ansible.builtin.copy:
     src: "{{ output_dir }}/capsule_certs.tar"
-    dest: /root
+    dest: /root/
 
 - name: Grab satellite-installer command for capsule deployment
   delegate_to: "satellite.{{ guid }}.internal"
