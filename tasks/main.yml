@@ -211,7 +211,7 @@
     --certs-tar /root/capsule_certs.tar \
     --server-cert /root/capsule-certs/cert.pem \
     --server-key /root/capsule-certs/privkey.pem \
-    --server-ca-cert /root/capsule-certs/letsencrypt-ca-bundle.pem
+    --server-ca-cert /root/capsule-certs/letsencrypt-ca-bundle.pem > output.txt
 
 - name: Fetch the generated capsule_certs.tar file from satellite
   delegate_to: "satellite.{{ guid }}.internal"
@@ -225,3 +225,22 @@
       {{ capsule_cert_file.content|b64decode }}
     dest: /root/capsule_certs.tar
 
+- name: Grab satellite-installer command for capsule deployment
+  delegate_to: "satellite.{{ guid }}.internal"
+  shell: sed -n "/"\ \ satellite-installer"/,\$p" /root/output.txt > /root/satellite-install-capsule-cmd.txt
+
+- name: Fetch the generated satellite-installer command for capsule deployment
+  delegate_to: "satellite.{{ guid }}.internal"
+  ansible.builtin.slurp:
+    src: /root/satellite-install-capsule-cmd.txt
+  register: satellite-install-capsule-cmd
+
+- name: Copy satellite-install-capsule-cmd command file from satellite to capsule
+  copy:
+    content: |
+      {{ satellite-install-capsule-cmd.content|b64decode }}
+    dest: /root/satellite-install-capsule-cmd.sh
+    mode: 755
+
+- name: Deploy capsule using satellite-install-capsule-cmd.sh
+  shell: /root/satellite-install-capsule-cmd.sh > /root/satellite-install-capsule-cmd.out
