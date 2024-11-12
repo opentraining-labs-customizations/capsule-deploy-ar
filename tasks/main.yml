@@ -166,7 +166,7 @@
   register: capsule_cert_file
  
 - name: Copy cert.pem file from capsule to satellite
-  delegate_to: "{{ pert_satellite_internal_fqdn }}"
+  delegate_to: "satellite.{{ guid }}.internal"
   copy:
     content: |
       {{ capsule_cert_file.content|b64decode }}
@@ -178,7 +178,7 @@
   register: capsule_cert_file
   
 - name: Copy privkey.pem file from capsule to satellite
-  delegate_to: "{{ pert_satellite_internal_fqdn }}"
+  delegate_to: "satellite.{{ guid }}.internal"
   copy:
     content: |
       {{ capsule_cert_file.content|b64decode }}
@@ -190,14 +190,14 @@
   register: capsule_cert_file
   
 - name: Copy letsencrypt-ca-bundle.pem file from capsule to satellite
-  delegate_to: "{{ pert_satellite_internal_fqdn }}"
+  delegate_to: "satellite.{{ guid }}.internal"
   copy:
     content: |
       {{ capsule_cert_file.content|b64decode }}
     dest: /root/capsule-certs/letsencrypt-ca-bundle.pem
 
 - name: Generate capsule certificates on satellite server
-  delegate_to: "{{ pert_satellite_internal_fqdn }}"
+  delegate_to: "satellite.{{ guid }}.internal"
   shell: >
     capsule-certs-generate \
     --foreman-proxy-fqdn {{ pert_capsule_external_fqdn }} \
@@ -207,7 +207,7 @@
     --server-ca-cert /root/capsule-certs/letsencrypt-ca-bundle.pem
 
 - name: Fetch the generated capsule_certs.tar file from satellite
-  delegate_to: "{{ pert_satellite_internal_fqdn }}"
+  delegate_to: "satellite.{{ guid }}.internal"
   
   ansible.builtin.slurp:
     src: /root/capsule_certs.tar
