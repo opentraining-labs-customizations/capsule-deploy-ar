@@ -243,4 +243,5 @@
     mode: 755
 
 - name: Deploy capsule using satellite-install-capsule-cmd.sh
+  become: true
   shell: /root/satellite-install-capsule-cmd.sh > /root/satellite-install-capsule-cmd.out
