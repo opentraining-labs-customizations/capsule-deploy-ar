@@ -251,3 +251,13 @@
 - name: Deploy capsule using satellite-install-capsule-cmd.sh
   become: true
   shell: /root/satellite-install-capsule-cmd.sh > /root/satellite-install-capsule-cmd.out
+
+- name: Run hammer capsule content add command on satellite
+  delegate_to: "satellite.{{ guid }}.internal"
+  become: true
+  shell: hammer capsule content add-lifecycle-environment --name {{ pert_capsule_external_fqdn }} --lifecycle-environment Library --organization-id 1
+
+- name: Run hammer capsule content synchronize command on satellite
+  delegate_to: "satellite.{{ guid }}.internal"
+  become: true
+  shell: hammer capsule content synchronize --name {{ pert_capsule_external_fqdn }} --organization-id 1
