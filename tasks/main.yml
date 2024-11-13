@@ -243,8 +243,10 @@
     mode: 755
 
 - name: Tweak the capsule deployment command in satellite-install-capsule-cmd.sh
-  ansible.builtin.shell: |
-    sed -i '/certs-tar-file/c\\--certs-tar-file  "/root/capsule_certs.tar"\\\\' /root/satellite-install-capsule-cmd.sh
+  ansible.builtin.lineinfile:
+    path: /root/satellite-install-capsule-cmd.sh
+    regexp: 'certs-tar-file'
+    line: '                    --certs-tar-file  "/root/capsule_certs.tar"\'
 
 - name: Deploy capsule using satellite-install-capsule-cmd.sh
   become: true
