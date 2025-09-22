@@ -72,12 +72,12 @@
 
 - name: Retrieve LetsEncrypt R12 cert
   slurp:
-    src: "/etc/letsencrypt/live/{{ pert_satellite_external_fqdn }}/r12.pem"
+    src: "/etc/letsencrypt/live/{{ pert_capsule_external_fqdn }}/r12.pem"
   register: intermediate_cert_r12
 
 - name: Retrieve LetsEncrypt R13 cert
   slurp:
-    src: "/etc/letsencrypt/live/{{ pert_satellite_external_fqdn }}/r13.pem"
+    src: "/etc/letsencrypt/live/{{ pert_capsule_external_fqdn }}/r13.pem"
   register: intermediate_cert_r13
 
 - name: Retrieve LetsEncrypt root X1 cert
